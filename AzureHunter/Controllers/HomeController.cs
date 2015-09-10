@@ -1,5 +1,7 @@
-﻿using System;
+﻿using AzureHunter.Repository;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -25,6 +27,17 @@ namespace AzureHunter.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+
+        public ActionResult Items()
+        {
+            ViewBag.Message = "Your items";
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                return View(ctx.Items.ToList());
+            }
         }
     }
 }
