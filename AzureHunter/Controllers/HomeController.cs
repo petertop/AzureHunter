@@ -1,4 +1,5 @@
-﻿using AzureHunter.Repository;
+﻿using AzureHunter.Models;
+using AzureHunter.Repository;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -29,15 +30,44 @@ namespace AzureHunter.Controllers
             return View();
         }
 
-
-        public ActionResult Items()
+        public ActionResult Items(IEnumerable<Item> items)
         {
             ViewBag.Message = "Your items";
+            if (items == null)
+            {
+                using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+                {
+                    items = ctx.Items.ToList();
+                }
+            }
+            return View(items);
+        }
+
+        public ActionResult AddItem()
+        {
+            ViewBag.Message = "Add item";
+
+            var item = new Item();
+
+            return View(item);
+
+        }
+
+        [HttpPost]
+        public ActionResult AddItem(Item item)
+        {
+            ViewBag.Message = "Add item";
+
+            List<Item> items = new List<Item>();
 
             using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
             {
-                return View(ctx.Items.ToList());
+                ctx.Items.Add(item);
+                ctx.SaveChanges();
+
+                items = ctx.Items.ToList();
             }
+            return View("Items", items);
         }
     }
 }
