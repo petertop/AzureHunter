@@ -1,0 +1,16 @@
+﻿@model AzureHunter.Models.Item
+
+@{
+    ViewBag.Title = "EditItemConfirm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Item Was Edited</h2>
+
+<div>
+    <h4>Thank's for editing item: @Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+</div>
+<p>
+    @Html.ActionLink("Edit again", "EditItem", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Items")
+</p>

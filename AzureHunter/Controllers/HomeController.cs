@@ -43,6 +43,8 @@ namespace AzureHunter.Controllers
             return View(items);
         }
 
+
+        //------------ADD--------------------------------------
         public ActionResult AddItem()
         {
             ViewBag.Message = "Add item";
@@ -68,6 +70,86 @@ namespace AzureHunter.Controllers
                 items = ctx.Items.ToList();
             }
             return View("Items", items);
+        }
+
+
+        //------------DELETE-----------------------------------
+        public ActionResult DeleteItem(string id)
+        {
+            ViewBag.Message = "Delete item";
+
+            Item item;
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                item = ctx.Items.Find(int.Parse(id));
+            }
+
+            return View(item);
+
+        }
+
+        [HttpPost]
+        public ActionResult DeleteItem(Item item)
+        {
+            // //set to delete
+            // http://stackoverflow.com/questions/15945172/the-object-cannot-be-deleted-because-it-was-not-found-in-the-objectstatemanager
+            ViewBag.Message = "Item was deleted.";
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                ctx.Entry(item).State = System.Data.Entity.EntityState.Deleted;
+                ctx.Items.Remove(item);
+                ctx.SaveChanges();
+            }
+
+            return View("ItemWasDeleted", item);
+        }
+
+
+        //------------EDIT-----------------------------------
+        public ActionResult EditItem(string id)
+        {
+            ViewBag.Message = "Edit item";
+
+            Item item;
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                item = ctx.Items.Find(int.Parse(id));
+            }
+
+            return View(item);
+
+        }
+
+        [HttpPost]
+        public ActionResult EditItem(Item item)
+        {
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                ctx.Entry(item).State = System.Data.Entity.EntityState.Modified;
+                ctx.SaveChanges();
+            }
+
+            return View("EditItemConfirm", item);
+        }
+
+
+        //-----------DETAILS----------------------------------
+        public ActionResult DetailItem(string id)
+        {
+            ViewBag.Message = "Detail item";
+
+            Item item;
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                item = ctx.Items.Find(int.Parse(id));
+            }
+
+            return View(item);
+
         }
     }
 }

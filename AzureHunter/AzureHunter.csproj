@@ -166,6 +166,11 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Home\Items.cshtml" />
     <Content Include="Views\Home\AddItem.cshtml" />
+    <Content Include="Views\Home\DeleteItem.cshtml" />
+    <Content Include="Views\Home\ItemWasDeleted.cshtml" />
+    <Content Include="Views\Home\EditItem.cshtml" />
+    <Content Include="Views\Home\EditItemConfirm.cshtml" />
+    <Content Include="Views\Home\DetailItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
