@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AzureHunter.Models.File>
+﻿@model IEnumerable<AzureHunter.ViewModels.ViewModelFile>
 
 @{
     ViewBag.Title = "Files";
@@ -19,9 +19,6 @@
             @Html.DisplayNameFor(model => model.ContentType)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Content)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.FileType)
         </th>
         <th></th>
@@ -36,14 +33,10 @@
             @Html.DisplayFor(modelItem => item.ContentType)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.FileType)
         </td>
         <td>
-            @Html.ActionLink("Edit", "EditFile", new { id=item.Id }) |
-            @Html.ActionLink("Details", "DetailsFile", new { id=item.Id }) |
+            @Html.ActionLink("Get File", "GetFile", new { id=item.Id }) |
             @Html.ActionLink("Delete", "DeleteFile", new { id=item.Id })
         </td>
     </tr>

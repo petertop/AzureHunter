@@ -1,0 +1,14 @@
+﻿@model AzureHunter.Models.File
+@{
+    ViewBag.Title = "FileWasDeleted";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>File Was Deleted</h2>
+
+<div>
+    <h4>File: <i>Name: @Html.DisplayFor(model => model.FileName) with Id: @Html.DisplayFor(model => model.Id)</i>,  was deleted!</h4>
+    <hr />
+</div>
+
+@Html.ActionLink("Back to List", "Files")

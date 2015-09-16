@@ -25,5 +25,7 @@ namespace AzureHunter.Repository
         // Properties
         public DbSet<Item> Items { get; set; }
         public DbSet<File> Files { get; set; }
+
+        public System.Data.Entity.DbSet<AzureHunter.ViewModels.ViewModelFile> ViewModelFiles { get; set; }
     }
 }

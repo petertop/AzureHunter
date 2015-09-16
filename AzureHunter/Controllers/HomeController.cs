@@ -1,8 +1,10 @@
 ﻿using AzureHunter.Models;
 using AzureHunter.Repository;
+using AzureHunter.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -14,6 +16,9 @@ namespace AzureHunter.Controllers
     // http://www.prideparrot.com/blog/archive/2012/8/uploading_and_returning_files
     // http://www.mikesdotnetting.com/article/259/asp-net-mvc-5-with-ef-6-working-with-files
     // http://stackoverflow.com/questions/5662923/asp-net-mvc3-custom-validation-attribute-client-side-broken
+
+    // File: http://www.dotnet-tricks.com/Tutorial/mvc/aX9D090113-File-upload-with-strongly-typed-view-and-model-validation.html
+    // http://www.dotnet-tricks.com/Tutorial/mvc/aX9D090113-File-upload-with-strongly-typed-view-and-model-validation.html
 
 
     public class HomeController : Controller
@@ -161,17 +166,36 @@ namespace AzureHunter.Controllers
 
 
         //------------ FILES ---------------------------------
-        public ActionResult Files(IEnumerable<File> files)
+        public ActionResult Files([Bind(Include = "FileName, ContentType, FileType")]IEnumerable<ViewModelFile> files)
         {
             ViewBag.Message = "Your files";
+            IEnumerable<ViewModelFile> vmfiles;
             if (files == null)
             {
                 using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
                 {
-                    files = ctx.Files.ToList();
+                    var result = ctx.Files.ToList();
+
+                    vmfiles = result.Select(fi => new ViewModelFile
+                    {
+                        Id = fi.Id,
+                        FileName = fi.FileName,
+                        ContentType = fi.ContentType,
+                        FileType = fi.FileType
+                    });
                 }
             }
-            return View(files);
+            else
+            {
+                vmfiles = files.Select(fi => new ViewModelFile
+                {
+                    Id = fi.Id,
+                    FileName = fi.FileName,
+                    ContentType = fi.ContentType,
+                    FileType = fi.FileType
+                });
+            }
+            return View(vmfiles);
         }
 
 
@@ -185,9 +209,76 @@ namespace AzureHunter.Controllers
         [HttpPost]
         public ActionResult CreateFile(HttpPostedFileBase upload)
         {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (upload != null && upload.ContentLength > 0)
+                    {
+                        var file = new File
+                        {
+                            FileName = System.IO.Path.GetFileName(upload.FileName),
+                            FileType = FileType.Avatar,
+                            ContentType = upload.ContentType
+                        };
+                        using (var reader = new System.IO.BinaryReader(upload.InputStream))
+                        {
+                            file.Content = reader.ReadBytes(upload.ContentLength);
+                        }
+                        using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+                        {
+                            ctx.Files.Add(file);
+                            ctx.SaveChanges();
+                        }
 
-            return View();
+                        RedirectToAction("Files");
+                    }
+                }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                //Log the error (uncomment dex variable name and add a line here to write a log.
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+
+            return View(new File());
         }
 
+
+
+        public ActionResult DeleteFile(string id)
+        {
+            ViewBag.Message = "File item";
+
+            File item;
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                item = ctx.Files.Find(int.Parse(id));
+            }
+
+            return View(new ViewModelFile { Id = item.Id,
+            FileType = item.FileType,
+            FileName = item.FileName
+            });
+
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFile(File file)
+        {
+            // //set to delete
+            // http://stackoverflow.com/questions/15945172/the-object-cannot-be-deleted-because-it-was-not-found-in-the-objectstatemanager
+            ViewBag.Message = "File was deleted.";
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                ctx.Entry(file).State = System.Data.Entity.EntityState.Deleted;
+                ctx.Files.Remove(file);
+                ctx.SaveChanges();
+            }
+
+            return View("FileWasDeleted", file);
+        }
     }
 }
