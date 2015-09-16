@@ -9,6 +9,13 @@ using System.Web.Mvc;
 
 namespace AzureHunter.Controllers
 {
+    // References
+    // http://www.codeproject.com/Articles/275056/Custom-Client-Side-Validation-in-ASP-NET-MVC
+    // http://www.prideparrot.com/blog/archive/2012/8/uploading_and_returning_files
+    // http://www.mikesdotnetting.com/article/259/asp-net-mvc-5-with-ef-6-working-with-files
+    // http://stackoverflow.com/questions/5662923/asp-net-mvc3-custom-validation-attribute-client-side-broken
+
+
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -151,5 +158,36 @@ namespace AzureHunter.Controllers
             return View(item);
 
         }
+
+
+        //------------ FILES ---------------------------------
+        public ActionResult Files(IEnumerable<File> files)
+        {
+            ViewBag.Message = "Your files";
+            if (files == null)
+            {
+                using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+                {
+                    files = ctx.Files.ToList();
+                }
+            }
+            return View(files);
+        }
+
+
+        public ActionResult CreateFile()
+        {
+            var file = new File();
+            return View(file);
+        }
+
+
+        [HttpPost]
+        public ActionResult CreateFile(HttpPostedFileBase upload)
+        {
+
+            return View();
+        }
+
     }
 }

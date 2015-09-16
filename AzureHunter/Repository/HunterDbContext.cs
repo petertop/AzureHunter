@@ -16,7 +16,6 @@ namespace AzureHunter.Repository
 
         }
 
-
         public HunterDbContext(string cnnString)
             :base(cnnString)
         {
@@ -25,5 +24,6 @@ namespace AzureHunter.Repository
 
         // Properties
         public DbSet<Item> Items { get; set; }
+        public DbSet<File> Files { get; set; }
     }
 }

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<AzureHunter.Models.File>
+
+@{
+    ViewBag.Title = "Files";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Files</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateFile")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FileName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContentType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FileType)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FileName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContentType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FileType)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditFile", new { id=item.Id }) |
+            @Html.ActionLink("Details", "DetailsFile", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "DeleteFile", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
