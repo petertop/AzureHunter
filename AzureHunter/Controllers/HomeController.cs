@@ -231,7 +231,7 @@ namespace AzureHunter.Controllers
                             ctx.SaveChanges();
                         }
 
-                        RedirectToAction("Files");
+                        return RedirectToAction("Files");
                     }
                 }
             }
@@ -242,6 +242,7 @@ namespace AzureHunter.Controllers
             }
 
             return View(new File());
+
         }
 
 
@@ -264,6 +265,7 @@ namespace AzureHunter.Controllers
 
         }
 
+
         [HttpPost]
         public ActionResult DeleteFile(File file)
         {
@@ -279,6 +281,43 @@ namespace AzureHunter.Controllers
             }
 
             return View("FileWasDeleted", file);
+        }
+
+
+        public ActionResult GetFile(string id)
+        {
+            ViewBag.Message = "File";
+
+            File item;
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                item = ctx.Files.Find(int.Parse(id));
+            }
+
+            return View(new ViewModelFile
+            {
+                Id = item.Id,
+                FileType = item.FileType,
+                FileName = item.FileName
+            });
+
+        }
+
+
+        [HttpPost]
+        public ActionResult GetFileContent(string id)
+        {
+            ViewBag.Message = "File";
+
+            File item;
+
+            using (var ctx = new HunterDbContext(ConfigurationManager.AppSettings["AzureHunterDatabaseCnn"]))
+            {
+                item = ctx.Files.Find(int.Parse(id));
+            }
+
+            return File(item.Content, item.ContentType);
         }
     }
 }

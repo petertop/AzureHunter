@@ -191,6 +191,8 @@
     <Content Include="Views\Home\CreateFile.cshtml" />
     <Content Include="Views\Home\ItemWasDeleted - Copy.cshtml" />
     <Content Include="Views\Home\DeleteFile.cshtml" />
+    <Content Include="Views\Home\GetFileContent.cshtml" />
+    <Content Include="Views\Home\GetFile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
