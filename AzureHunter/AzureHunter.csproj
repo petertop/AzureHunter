@@ -135,6 +135,10 @@
     <Compile Include="Migrations\201509161900467_Change_Model.Designer.cs">
       <DependentUpon>201509161900467_Change_Model.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509231707218_RemoveTableForViewFiles.cs" />
+    <Compile Include="Migrations\201509231707218_RemoveTableForViewFiles.Designer.cs">
+      <DependentUpon>201509231707218_RemoveTableForViewFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FileType.cs" />
     <Compile Include="Models\File.cs" />
@@ -213,6 +217,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201509161900467_Change_Model.resx">
       <DependentUpon>201509161900467_Change_Model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509231707218_RemoveTableForViewFiles.resx">
+      <DependentUpon>201509231707218_RemoveTableForViewFiles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
